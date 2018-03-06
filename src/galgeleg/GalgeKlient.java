@@ -29,7 +29,7 @@ public class GalgeKlient
         
         while (aktiv)
         {
-            System.out.println("Indtast bogstav");
+            System.out.println("Indtast  bogstav");
             gæt = tastatur.next();
             k.gætBogstav(gæt);   
             System.out.println(k.outputTilKlient());
