@@ -13,5 +13,6 @@ public interface GalgeInterface
     @WebMethod boolean erSpilletSlut();     
     @WebMethod String outputTilKlient();  
     @WebMethod String visFigur();
+    @WebMethod boolean logInd(String brugernavn, String adgangskode) throws Exception;
   
 }

@@ -1,9 +1,12 @@
 package galgeleg;
 
+import brugerautorisation.data.Bruger;
+import brugerautorisation.transport.rmi.Brugeradmin;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.rmi.Naming;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,6 +14,8 @@ import java.util.Random;
 
 import java.rmi.server.UnicastRemoteObject;
 import javax.jws.WebService;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
 //Op til server
 @WebService(endpointInterface = "galgeleg.GalgeInterface")
@@ -25,6 +30,7 @@ public class Galgelogik implements GalgeInterface {
     private boolean sidsteBogstavVarKorrekt;
     private boolean spilletErVundet;
     private boolean spilletErTabt;
+    private Brugeradmin ba;
 
     public ArrayList<String> getBrugteBogstaver() {
         return brugteBogstaver;
@@ -157,7 +163,7 @@ public class Galgelogik implements GalgeInterface {
             outputTilKlientArray.add("- SPILLET ER TABT\n"); // klient output
         }
         if (spilletErVundet) {
-            outputTilKlientArray.add("- SPILLET ER VUDNET\n"); // klient output
+            outputTilKlientArray.add("- SPILLET ER VUNDET\n"); // klient output
         }
         outputTilKlientArray.add("--------------- \n");
     }
@@ -197,6 +203,20 @@ public class Galgelogik implements GalgeInterface {
 
         System.out.println("muligeOrd = " + muligeOrd);
         nulstil();
+    }
+    
+    
+    @Override
+    public boolean logInd(String brugernavn, String adgangskode) {
+        try {
+            
+            ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+            Bruger b = ba.hentBruger(brugernavn, adgangskode);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
