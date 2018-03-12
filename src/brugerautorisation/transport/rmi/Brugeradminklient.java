@@ -21,7 +21,7 @@ public class Brugeradminklient {
 //
 //		String webside = (String) ba.getEkstraFelt("s123456", "kodeen test, husk at skifte kode");
 		//ba.ændrAdgangskode("s123456", "kode1xyz", "kode1xyz");
-		Bruger b = ba.hentBruger("s16344", "Linux123");
+		Bruger b = ba.hentBruger("s163044", "Linux123");
                 
 		System.out.println("Fik bruger = " + b);
 		System.out.println("Data: " + Diverse.toString(b));

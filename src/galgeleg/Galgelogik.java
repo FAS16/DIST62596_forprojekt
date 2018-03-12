@@ -7,32 +7,66 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
-
-import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jws.WebService;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 //Op til server
 @WebService(endpointInterface = "galgeleg.GalgeInterface")
 public class Galgelogik implements GalgeInterface {
 
-    ArrayList<String> outputTilKlientArray = new ArrayList<String>();
+    ArrayList<String> klientOutput = new ArrayList<String>();
     ArrayList<String> muligeOrd = new ArrayList<String>();
     private String ordet;
-    private ArrayList<String> brugteBogstaver = new ArrayList<String>();
+    private String brugteBogstaver;
     private String synligtOrd;
     private int antalForkerteBogstaver;
     private boolean sidsteBogstavVarKorrekt;
     private boolean spilletErVundet;
     private boolean spilletErTabt;
+    private boolean aktivSession;
+    private boolean sessionHentet;
     private Brugeradmin ba;
+    private String brugernavn;
+    private String adgangskode;
+    private Bruger b;
 
-    public ArrayList<String> getBrugteBogstaver() {
+    public Galgelogik() {
+        muligeOrd.add("bil");
+        muligeOrd.add("computer");
+        nulstil();
+    }
+    
+    
+    public void nulstil() {
+
+        setBrugteBogstaver("");
+        setAntalForkerteBogstaver(0);
+        setSpilletErVundet(false);
+        setSpilletErTabt(false);
+        setOrdet(muligeOrd.get(new Random().nextInt(muligeOrd.size())));
+        klientOutput.clear();
+        setSynligtOrd("");
+        setSidsteBogstavVarKorrekt(false);
+        setSpilletErVundet(false);
+        setSpilletErTabt(false);        
+        opdaterSynligtOrd();
+    }
+
+    public boolean isSessionHentet() {
+        return sessionHentet;
+    }
+
+    public void setSessionHentet(boolean sessionHentet) {
+        this.sessionHentet = sessionHentet;
+    }
+
+    public String getBrugteBogstaver() {
         return brugteBogstaver;
     }
 
@@ -64,79 +98,160 @@ public class Galgelogik implements GalgeInterface {
         return spilletErTabt || spilletErVundet;
     }
 
-    public Galgelogik() {
-        muligeOrd.add("bil");
-        muligeOrd.add("computer");
-        muligeOrd.add("programmering");
-        muligeOrd.add("motorvej");
-        muligeOrd.add("busrute");
-        muligeOrd.add("gangsti");
-        muligeOrd.add("skovsnegl");
-        muligeOrd.add("solsort");
-        muligeOrd.add("seksten");
-        muligeOrd.add("sytten");
-        nulstil();
+    public void setOrdet(String ordet) {
+        this.ordet = ordet;
+        if (ba != null) {
+            try {
+
+                ba.setEkstraFelt(brugernavn, adgangskode, "ordet", ordet);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 
-    public void nulstil() {
-        brugteBogstaver.clear();
-        antalForkerteBogstaver = 0;
-        spilletErVundet = false;
-        spilletErTabt = false;
-        ordet = muligeOrd.get(new Random().nextInt(muligeOrd.size()));
-        opdaterSynligtOrd();
+    public void setBrugteBogstaver(String brugteBogstaver) {
+        this.brugteBogstaver = brugteBogstaver;
+        if (ba != null) {
+
+            try {
+
+                ba.setEkstraFelt(brugernavn, adgangskode, "brugteBogstaver", brugteBogstaver);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
     }
 
-    private void opdaterSynligtOrd() {
-        synligtOrd = "";
-        spilletErVundet = true;
+    public void setSynligtOrd(String synligtOrd) {
+        this.synligtOrd = synligtOrd;
+        if (ba != null) {
+
+            try {
+
+                ba.setEkstraFelt(brugernavn, adgangskode, "synligtOrd", synligtOrd);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }
+
+    public void setAntalForkerteBogstaver(int antalForkerteBogstaver) {
+        this.antalForkerteBogstaver = antalForkerteBogstaver;
+        if (ba != null) {
+            try {
+
+                ba.setEkstraFelt(brugernavn, adgangskode, "antalForkerteBogstaver", antalForkerteBogstaver);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }
+
+    public void setSidsteBogstavVarKorrekt(boolean sidsteBogstavVarKorrekt) {
+        this.sidsteBogstavVarKorrekt = sidsteBogstavVarKorrekt;
+        if (ba != null) {
+            try {
+
+                ba.setEkstraFelt(brugernavn, adgangskode, "sidsteBogstavVarKorrekt", sidsteBogstavVarKorrekt);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
+    public void setSpilletErVundet(boolean spilletErVundet) {
+        this.spilletErVundet = spilletErVundet;
+        if (spilletErVundet == true) this.aktivSession = false;
+        else if (spilletErVundet == false) this.aktivSession = true;
+        
+        if (ba != null) {
+            try {
+                ba.setEkstraFelt(brugernavn, adgangskode, "spilletErVundet", this.spilletErVundet);
+                if (this.spilletErVundet == true) {
+                    ba.setEkstraFelt(brugernavn, adgangskode, "aktivSession", aktivSession);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }
+
+    public void setSpilletErTabt(boolean spilletErTabt) {
+        this.spilletErTabt = spilletErTabt;
+        if (spilletErTabt == true) this.aktivSession = false;
+        else if (spilletErTabt == false) this.aktivSession = true;
+        
+        if (ba != null) {
+
+            try {
+                ba.setEkstraFelt(brugernavn, adgangskode, "spilletErTabt", spilletErTabt);
+                if (spilletErTabt == true) {
+                    ba.setEkstraFelt(brugernavn, adgangskode, "aktivSession", aktivSession);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }
+
+
+    public void opdaterSynligtOrd() {
+        setSynligtOrd("");
+        setSpilletErVundet(true);
         for (int n = 0; n < ordet.length(); n++) {
             String bogstav = ordet.substring(n, n + 1);
             if (brugteBogstaver.contains(bogstav)) {
-                synligtOrd = synligtOrd + bogstav;
+                setSynligtOrd(synligtOrd + bogstav);
             } else {
-                synligtOrd = synligtOrd + "*";
-                spilletErVundet = false;
+                setSynligtOrd(synligtOrd + "*");
+                setSpilletErVundet(false);
             }
         }
     }
 
     public void gætBogstav(String bogstav) {
-        outputTilKlientArray.clear();
+        klientOutput.clear();
 
-        if (bogstav.length() != 1) {
-            return;
-        }
+        if (bogstav.length() != 1)return;
         System.out.println("Der gættes på bogstavet: " + bogstav);
-        outputTilKlientArray.add("Der gættes på bogstavet: " + bogstav + "\n"); // klient output
-        if (brugteBogstaver.contains(bogstav)) {
-            return;
-        }
-        if (spilletErVundet || spilletErTabt) {
-            return;
-        }
-
-        brugteBogstaver.add(bogstav);
+        klientOutput.add("Der gættes på bogstavet: " + bogstav + "\n"); // klient output
+        if (brugteBogstaver.contains(bogstav)) return;
+        if (spilletErVundet || spilletErTabt) return;
+        
+        setBrugteBogstaver(brugteBogstaver + bogstav);
 
         if (ordet.contains(bogstav)) {
-            sidsteBogstavVarKorrekt = true;
+            setSidsteBogstavVarKorrekt(true);
             System.out.println("Bogstavet var korrekt: " + bogstav);
-            outputTilKlientArray.add("Bogstavet var korrekt\n"); // klient output
+            klientOutput.add("Bogstavet var korrekt\n"); // klient output
         } else {
             // Vi gættede på et bogstav der ikke var i ordet.
-            sidsteBogstavVarKorrekt = false;
+            setSidsteBogstavVarKorrekt(false);
             System.out.println("Bogstavet var IKKE korrekt: " + bogstav);
-            outputTilKlientArray.add("Bogstavet var IKKE korrekt\n"); // klient output
-            antalForkerteBogstaver = antalForkerteBogstaver + 1;
-            if (antalForkerteBogstaver > 6) {
-                spilletErTabt = true;
+            klientOutput.add("Bogstavet var IKKE korrekt\n"); // klient output
+            setAntalForkerteBogstaver(antalForkerteBogstaver + 1);
+            if (antalForkerteBogstaver >= 6) {
+                setSpilletErTabt(true);
             }
         }
         opdaterSynligtOrd();
     }
 
     public void logStatus() {
-        outputTilKlientArray.clear();
+        klientOutput.clear();
 
         System.out.println("---------- ");
         if (erSpilletSlut()) {
@@ -144,7 +259,7 @@ public class Galgelogik implements GalgeInterface {
         }
         System.out.println("- synligtOrd = " + synligtOrd);
         System.out.println("- forkerteBogstaver = " + antalForkerteBogstaver);
-        System.out.println("- brugeBogstaver = " + brugteBogstaver);
+        System.out.println("- brugteBogstaver = " + brugteBogstaver);
         if (spilletErTabt) {
             System.out.println("- SPILLET ER TABT");
         }
@@ -154,21 +269,21 @@ public class Galgelogik implements GalgeInterface {
         System.out.println("---------- ");
 
         // Klient output
-        outputTilKlientArray.add("---------- \n"); // klient output
-        outputTilKlientArray.add("- ordet (skult) = " + ordet + "\n"); // klient output
-        outputTilKlientArray.add("- synligtOrd = " + synligtOrd + "\n"); // klient output
-        outputTilKlientArray.add("- forkerteBogstaver = " + antalForkerteBogstaver + "\n"); // klient output
-        outputTilKlientArray.add("- brugteBogstaver = " + brugteBogstaver + "\n"); // klient output
+        klientOutput.add("---------- \n"); // klient output
+        klientOutput.add("- ordet (skult) = " + ordet + "\n"); // klient output
+        klientOutput.add("- synligtOrd = " + synligtOrd + "\n"); // klient output
+        klientOutput.add("- forkerteBogstaver = " + antalForkerteBogstaver + "\n"); // klient output
+        klientOutput.add("- brugteBogstaver = " + brugteBogstaver + "\n"); // klient output
         if (spilletErTabt) {
-            outputTilKlientArray.add("- SPILLET ER TABT\n"); // klient output
+            klientOutput.add("- SPILLET ER TABT\n"); // klient output
         }
         if (spilletErVundet) {
-            outputTilKlientArray.add("- SPILLET ER VUNDET\n"); // klient output
+            klientOutput.add("- SPILLET ER VUNDET\n"); // klient output
         }
-        outputTilKlientArray.add("--------------- \n");
+        klientOutput.add("--------------- \n");
     }
 
-    public static String hentUrl(String url) throws IOException {
+    public String hentUrl(String url) throws IOException {
         System.out.println("Henter data fra " + url);
         BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
         StringBuilder sb = new StringBuilder();
@@ -204,19 +319,32 @@ public class Galgelogik implements GalgeInterface {
         System.out.println("muligeOrd = " + muligeOrd);
         nulstil();
     }
-    
-    
+
     @Override
     public boolean logInd(String brugernavn, String adgangskode) {
         try {
-            
+            System.out.println(brugernavn + " logger ind.");
             ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-            Bruger b = ba.hentBruger(brugernavn, adgangskode);
-        }
-        catch (Exception e) {
+            b = ba.hentBruger(brugernavn, adgangskode);
+            this.brugernavn = brugernavn;
+            this.adgangskode = adgangskode;
+
+            this.aktivSession = (boolean) ba.getEkstraFelt(brugernavn, adgangskode, "aktivSession");
+            if (aktivSession || !brugteBogstaver.equals("")) {
+                System.out.println("aktivSession hente = " + aktivSession +brugteBogstaver+ " (Sidste session hentes og sendes til klienten)");
+                hentSidsteSession();
+            } else if(!aktivSession || !brugteBogstaver.equals("")){
+                System.out.println("aktivSession = " + aktivSession + " (Ingen session at hente, ny session startes)");
+                this.aktivSession = true;
+                sessionHentet = false;
+                ba.setEkstraFelt(brugernavn, adgangskode, "aktivSession", aktivSession);
+            }
+
+        } catch (Exception e) {
             return false;
         }
-        return true;
+
+        return true; //Det fordi session ikke bliver sat når programmet stoppes
     }
 
     @Override
@@ -315,9 +443,38 @@ public class Galgelogik implements GalgeInterface {
 
     @Override
     public String outputTilKlient() {
-        return outputTilKlientArray.toString();
+        return klientOutput.toString();
     }
 
+    public void hentSidsteSession() {
+
+//        
+//            this.ordet = (String) b.ekstraFelter.get("ordet");
+//            this.brugteBogstaver = (String) b.ekstraFelter.get("brugteBogstaver");
+//            this.synligtOrd = (String) b.ekstraFelter.get("synligtOrd");
+//            this.antalForkerteBogstaver = (int) b.ekstraFelter.get("antalForkerteBogstaver");
+//            this.sidsteBogstavVarKorrekt = (boolean) b.ekstraFelter.get("sidsteBogstavVarKorrekt");
+//            this.spilletErVundet = (boolean) b.ekstraFelter.get("spilletErVundet");
+//            this.spilletErTabt = (boolean) b.ekstraFelter.get("spilletErTabt");
+            try {
+            this.ordet = (String) ba.getEkstraFelt(brugernavn, adgangskode, "ordet");
+            this.brugteBogstaver = (String) ba.getEkstraFelt(brugernavn, adgangskode, "brugteBogstaver");
+            this.synligtOrd = (String) ba.getEkstraFelt(brugernavn, adgangskode, "synligtOrd");
+            this.antalForkerteBogstaver = (int) ba.getEkstraFelt(brugernavn, adgangskode, "antalForkerteBogstaver");
+            this.sidsteBogstavVarKorrekt = (boolean) ba.getEkstraFelt(brugernavn, adgangskode, "sidsteBogstavVarKorrekt");
+            this.spilletErVundet = (boolean) ba.getEkstraFelt(brugernavn, adgangskode, "spilletErVundet");
+            this.spilletErTabt = (boolean) ba.getEkstraFelt(brugernavn, adgangskode, "spilletErTabt");
+            
+            System.out.println("\nSidste session er hentet:");
+            sessionHentet = true;
+            outputTilKlient();
+        } catch (RemoteException ex) {
+            Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+
+    }
+
+    
+
 }
-
-

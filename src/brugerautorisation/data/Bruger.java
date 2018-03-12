@@ -14,7 +14,7 @@ public class Bruger implements Serializable
   public String fornavn = "test";
   public String efternavn = "testesen";
 	public String adgangskode;
-  public HashMap<String,Object> ekstraFelter = new HashMap<>();
+    public HashMap<String,Object> ekstraFelter = new HashMap<>();
 
 
 	public String toString()
