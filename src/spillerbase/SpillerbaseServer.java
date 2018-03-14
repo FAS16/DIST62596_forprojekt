@@ -26,7 +26,7 @@ public class SpillerbaseServer {
 
         SpillerbaseI spil = new SpillerbaseImpl();
         Naming.rebind(RMIURL, spil);
-        System.out.println("RMI server started");
+        System.out.println("RMI server startet");
 
     }
 }

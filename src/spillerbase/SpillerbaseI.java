@@ -5,27 +5,19 @@
  */
 package spillerbase;
 
-import galgeleg.GalgeImpl;
 import galgeleg.GalgeInterface;
-import galgeleg.Galgelogik;
 import java.util.ArrayList;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
 
 /**
  *
  * @author fahadali
  */
-
 public interface SpillerbaseI extends java.rmi.Remote {
 
-
-    GalgeInterface findSpil(String navn) throws java.rmi.RemoteException;;
-
+    GalgeInterface findSpil(String navn) throws java.rmi.RemoteException;
 
     ArrayList<String> hentAlleSpillere() throws java.rmi.RemoteException;
 
-
-    void registrerSpiller(String navn) throws java.rmi.RemoteException;;
+    void registrerSpiller(String navn) throws java.rmi.RemoteException;
 
 }

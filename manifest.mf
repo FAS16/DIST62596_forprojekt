@@ -1,3 +1,5 @@
 Manifest-Version: 1.0
 X-COMMENT: Main-Class will be added automatically by build
+Created-By: 1.8.0_161-b12 (Oracle Corporation)
+Class-Path: lib/javax.ws.rs-api-2.0.jar lib/java-json.jar
 

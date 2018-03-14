@@ -3,30 +3,19 @@ package galgeleg;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
-
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import javax.ws.rs.client.ClientBuilder;
 
-//Op til server
 public class Galgelogik {
 
     ArrayList<String> klientOutput = new ArrayList<String>();
@@ -38,7 +27,7 @@ public class Galgelogik {
     private boolean sidsteBogstavVarKorrekt;
     private boolean spilletErVundet;
     private boolean spilletErTabt;
-    //private boolean aktivSesksion;
+
     private boolean sessionHentet;
     private Brugeradmin brugerAdmin;
     private String brugernavn;
@@ -46,30 +35,22 @@ public class Galgelogik {
     private Bruger bruger;
 
     public Galgelogik() {
-        
+
         try {
-             String data = DRRest.hentOrdFraDR();
-    System.out.println("data = " + data);
-    data = data.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
-    System.out.println("data = " + data);
-    muligeOrd.clear();
-    muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
-    System.out.println("muligeOrd = " + muligeOrd);
-    
+            String data = DRRest.hentOrdFraDR();
+            System.out.println("data = " + data);
+            data = data.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
+            System.out.println("data = " + data);
+            muligeOrd.clear();
+            muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
+            System.out.println("muligeOrd = " + muligeOrd);
+
         } catch (Exception ex) {
             Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
             muligeOrd.add("bil");
-            
+            System.out.println("muligeOrd = " + muligeOrd);
+
         }
-        
-        
-        
-            
-            
-        
-
-        
-
 
         nulstil();
     }
@@ -89,13 +70,6 @@ public class Galgelogik {
         opdaterSynligtOrd();
     }
 
-//    public boolean isAktivSession() {
-//        return aktivSession;
-//    }
-//
-//    public void setAktivSession(boolean aktivSession) {
-//        this.aktivSession = aktivSession;
-//    }
     public Brugeradmin getBrugerAdmin() {
         return brugerAdmin;
     }
@@ -227,15 +201,11 @@ public class Galgelogik {
 
     public void setSpilletErVundet(boolean spilletErVundet) {
         this.spilletErVundet = spilletErVundet;
-//        if (spilletErVundet == true) this.aktivSession = false;
-//        else if (spilletErVundet == false) this.aktivSession = true;
 
         if (brugerAdmin != null) {
             try {
                 brugerAdmin.setEkstraFelt(brugernavn, adgangskode, "spilletErVundet", this.spilletErVundet);
-//                if (this.spilletErVundet == true) {
-//                    ba.setEkstraFelt(brugernavn, adgangskode, "aktivSession", aktivSession);
-//                }
+
             } catch (RemoteException ex) {
                 Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -246,16 +216,12 @@ public class Galgelogik {
 
     public void setSpilletErTabt(boolean spilletErTabt) {
         this.spilletErTabt = spilletErTabt;
-//        if (spilletErTabt == true) this.aktivSession = false;
-//        else if (spilletErTabt == false) this.aktivSession = true;
 
         if (brugerAdmin != null) {
 
             try {
                 brugerAdmin.setEkstraFelt(brugernavn, adgangskode, "spilletErTabt", spilletErTabt);
-//                if (spilletErTabt == true) {
-//                    ba.setEkstraFelt(brugernavn, adgangskode, "aktivSession", aktivSession);
-//                }
+
             } catch (RemoteException ex) {
                 Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -346,99 +312,16 @@ public class Galgelogik {
         klientOutput.add("--------------- \n");
     }
 
-//    public String hentUrl(String url) throws IOException {
-//        System.out.println("Henter data fra " + url);
-//        BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-//        StringBuilder sb = new StringBuilder();
-//        String linje = br.readLine();
-//        while (linje != null) {
-//            sb.append(linje + "\n");
-//            linje = br.readLine();
-//        }
-//        return sb.toString();
-//    }
-    
-    public String hentUrl(String url) throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-    StringBuilder sb = new StringBuilder();
-    String linje = br.readLine();
-    while (linje != null) {
-      sb.append(linje + "\n");
-      linje = br.readLine();
-    }
-    return sb.toString();
-  }
-    
-    
-    
-    
-    public void hentOrdFraDr() throws JSONException, RemoteException  {
-        
-    String data = DRRest.hentOrdFraDR();
-    System.out.println("data = " + data);
-    data = data.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
-    System.out.println("data = " + data);
-    muligeOrd.clear();
-    muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
-    System.out.println("muligeOrd = " + muligeOrd);
-    nulstil();
-    }
+    public void hentOrdFraDr() throws JSONException, RemoteException {
 
-//    public void hentOrdFraDr() throws Exception {
-//        String data = hentUrl("https://dr.dk");
-//        //System.out.println("data = " + data);
-//
-//        data = data.substring(data.indexOf("<body")). // fjern headere
-//                replaceAll("<.+?>", " ").toLowerCase(). // fjern tags
-//                replaceAll("&#198;", "æ"). // erstat HTML-tegn
-//                replaceAll("&#230;", "æ"). // erstat HTML-tegn
-//                replaceAll("&#216;", "ø"). // erstat HTML-tegn
-//                replaceAll("&#248;", "ø"). // erstat HTML-tegn
-//                replaceAll("&oslash;", "ø"). // erstat HTML-tegn
-//                replaceAll("&#229;", "å"). // erstat HTML-tegn
-//                replaceAll("[^a-zæøå]", " "). // fjern tegn der ikke er bogstaver
-//                replaceAll(" [a-zæøå] ", " "). // fjern 1-bogstavsord
-//                replaceAll(" [a-zæøå][a-zæøå] ", " "); // fjern 2-bogstavsord
-//
-//        System.out.println("data = " + data);
-//        System.out.println("data = " + Arrays.asList(data.split("\\s+")));
-//        muligeOrd.clear();
-//        muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
-//
-//        System.out.println("muligeOrd = " + muligeOrd);
-//        nulstil();
-//    }
-
-    public void logInd(String brugernavn, String adgangskode) {
-        try {
-
-//            System.out.println("\nBrugernavn:");
-//            brugernavn = tastatur.nextLine();
-//            System.out.println("Adgangskode:");
-//            adgangskode = tastatur.nextLine();
-//
-//            System.out.println(brugernavn + " logger ind.");
-            this.brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-            bruger = brugerAdmin.hentBruger(brugernavn, adgangskode);
-            this.brugernavn = brugernavn;
-            this.adgangskode = adgangskode;
-
-//            this.aktivSession = (boolean) ba.getEkstraFelt(brugernavn, adgangskode, "aktivSession");
-            if (/*aktivSession ||*/!brugteBogstaver.equals("")) {
-                System.out.println("[Aktiv session fundet - henter og sender til kliente])");
-                hentSidsteSession();
-            } else if (/*!aktivSession ||*/!brugteBogstaver.equals("")) {
-                System.out.println("[Ingen session at hente, ny session startes]");
-                //this.aktivSession = true;
-                sessionHentet = false;
-                //ba.setEkstraFelt(brugernavn, adgangskode, "aktivSession", aktivSession);
-            }
-
-        } catch (Exception e) {
-            logInd(brugernavn, adgangskode);
-
-        }
-
+        String data = DRRest.hentOrdFraDR();
+        System.out.println("data = " + data);
+        data = data.replaceAll("<.+?#>,:/", " ").toLowerCase().replaceAll("[^a-zæøå]", " ");
+        System.out.println("data = " + data);
+        muligeOrd.clear();
+        muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
+        System.out.println("muligeOrd = " + muligeOrd);
+        nulstil();
     }
 
     public String visFigur() {
@@ -537,30 +420,20 @@ public class Galgelogik {
     public String outputTilKlient() {
         return klientOutput.toString();
     }
-    
 
-    
     public void hentSidsteSession() {
 
         try {
-            //
-//            this.ordet = (String) b.ekstraFelter.get("ordet");
-//            this.brugteBogstaver = (String) b.ekstraFelter.get("brugteBogstaver");
-//            this.synligtOrd = (String) b.ekstraFelter.get("synligtOrd");
-//            this.antalForkerteBogstaver = (int) b.ekstraFelter.get("antalForkerteBogstaver");
-//            this.sidsteBogstavVarKorrekt = (boolean) b.ekstraFelter.get("sidsteBogstavVarKorrekt");
-//            this.spilletErVundet = (boolean) b.ekstraFelter.get("spilletErVundet");
-//            this.spilletErTabt = (boolean) b.ekstraFelter.get("spilletErTabt");
-this.ordet = (String) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "ordet");
-this.brugteBogstaver = (String) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "brugteBogstaver");
-this.synligtOrd = (String) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "synligtOrd");
-this.antalForkerteBogstaver = (int) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "antalForkerteBogstaver");
-this.sidsteBogstavVarKorrekt = (boolean) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "sidsteBogstavVarKorrekt");
-this.spilletErVundet = (boolean) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "spilletErVundet");
-this.spilletErTabt = (boolean) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "spilletErTabt");
-System.out.println("\nSidste session er hentet:");
-sessionHentet = true;
-outputTilKlient();
+            this.ordet = (String) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "ordet");
+            this.brugteBogstaver = (String) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "brugteBogstaver");
+            this.synligtOrd = (String) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "synligtOrd");
+            this.antalForkerteBogstaver = (int) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "antalForkerteBogstaver");
+            this.sidsteBogstavVarKorrekt = (boolean) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "sidsteBogstavVarKorrekt");
+            this.spilletErVundet = (boolean) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "spilletErVundet");
+            this.spilletErTabt = (boolean) brugerAdmin.getEkstraFelt(brugernavn, adgangskode, "spilletErTabt");
+            System.out.println("\nSidste session er hentet:");
+            sessionHentet = true;
+            outputTilKlient();
         } catch (RemoteException ex) {
             Logger.getLogger(Galgelogik.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -5,26 +5,24 @@
  */
 package spillerbase;
 
-
 import galgeleg.GalgeImpl;
 import galgeleg.GalgeInterface;
-import galgeleg.Galgelogik;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.jws.WebService;
 
 /**
  *
  * @author fahadali
  */
-
 public class SpillerbaseImpl extends UnicastRemoteObject implements SpillerbaseI {
 
     HashMap<String, GalgeImpl> galgeMap = new HashMap<>(); //kunne gemmes
-    
-    public SpillerbaseImpl()throws java.rmi.RemoteException{}
+
+    public SpillerbaseImpl() throws java.rmi.RemoteException {
+    }
 
     @Override
     public GalgeInterface findSpil(String navn) throws RemoteException {
@@ -33,19 +31,19 @@ public class SpillerbaseImpl extends UnicastRemoteObject implements SpillerbaseI
     }
 
     @Override
-    public ArrayList<String> hentAlleSpillere()throws RemoteException {
+    public ArrayList<String> hentAlleSpillere() throws RemoteException {
         System.out.println("hentAlleSpillere()");
         return new ArrayList<>(galgeMap.keySet());
     }
 
     @Override
-    public void registrerSpiller(String navn) throws RemoteException{
-        
+    public void registrerSpiller(String navn) throws RemoteException {
+
         if (galgeMap.containsKey(navn)) {
             throw new IllegalArgumentException("Spiller eksisterer allerede: " + navn);
 
-        } else{
-            System.out.println("Spiller registreret: "+navn);
+        } else {
+            System.out.println("Spiller registreret: " + navn);
             galgeMap.put(navn, new GalgeImpl());
         }
     }

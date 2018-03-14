@@ -1,12 +1,8 @@
 package galgeleg;
 
 import brugerautorisation.transport.rmi.Brugeradmin;
-import java.io.IOException;
 import java.rmi.*;
-import java.util.Scanner;
-import javax.jws.WebMethod;
 
-//Op til server
 public interface GalgeInterface extends Remote {
 
     String getBrugernavn() throws java.rmi.RemoteException;
@@ -62,10 +58,6 @@ public interface GalgeInterface extends Remote {
     void gætBogstav(String bogstav) throws java.rmi.RemoteException;
 
     void logStatus() throws java.rmi.RemoteException;
-
-    String hentUrl(String url) throws java.rmi.RemoteException;
-
-    void logInd(String brugernavn, String adgangskode) throws java.rmi.RemoteException;
 
     String visFigur() throws java.rmi.RemoteException;
 

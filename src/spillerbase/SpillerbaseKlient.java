@@ -7,17 +7,11 @@ package spillerbase;
 
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
-import galgeleg.DRRest;
-import galgeleg.GalgeImpl;
 import galgeleg.GalgeInterface;
-import galgeleg.Galgelogik;
-import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 /**
  *
@@ -25,7 +19,7 @@ import javax.xml.ws.Service;
  */
 public class SpillerbaseKlient {
 
-    private static final String URL = "http://130.225.170.248:9901/spillerbase?wsdl";
+    private static final String URL = "rmi://130.225.170.248:1099/SpillerbaseServer";
     private static SpillerbaseI spil;
 
     private static String brugernavn, adgangskode;
@@ -34,7 +28,7 @@ public class SpillerbaseKlient {
 
     public static void main(String[] args) throws Exception {
 
-        spil = (SpillerbaseI) Naming.lookup("rmi://130.225.170.248:1099/SpillerbaseServer");
+        spil = (SpillerbaseI) Naming.lookup(URL);
 
         spillere = spil.hentAlleSpillere();
         System.out.println("Alle spillere " + spillere);
@@ -74,9 +68,7 @@ public class SpillerbaseKlient {
 
         } else {
             System.out.println("Starter nyt spil");
-           // g.hentOrdFraDr();
-            
-            
+
         }
 
         while (true) {

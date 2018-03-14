@@ -1,13 +1,11 @@
 package galgeleg;
 
-
 import brugerautorisation.transport.rmi.Brugeradmin;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.JSONException;
 
 /**
  *
@@ -39,9 +37,9 @@ public class GalgeImpl extends UnicastRemoteObject implements GalgeInterface {
 
     @Override
     public String getSynligtOrd() throws RemoteException {
-        
+
         return logik.getSynligtOrd();
-        
+
     }
 
     @Override
@@ -111,7 +109,7 @@ public class GalgeImpl extends UnicastRemoteObject implements GalgeInterface {
 
     @Override
     public void nulstil() throws RemoteException {
-            logik.nulstil();
+        logik.nulstil();
     }
 
     @Override
@@ -127,29 +125,6 @@ public class GalgeImpl extends UnicastRemoteObject implements GalgeInterface {
     @Override
     public void logStatus() throws RemoteException {
         logik.logStatus();
-    }
-
-    @Override
-    public String hentUrl(String url) throws RemoteException {
-        try {
-            return logik.hentUrl(url);
-        } catch (IOException ex) {
-            Logger.getLogger(GalgeImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return null;
-    }
-
-//    @Override
-//    public void hentOrdFraDr() throws RemoteException {
-//        
-//            logik.hentOrdFraDR();
-//       
-//    }
-
-    @Override
-    public void logInd(String brugernavn, String adgangskode) throws RemoteException {
-        logik.logInd(brugernavn, adgangskode);
     }
 
     @Override
@@ -179,25 +154,22 @@ public class GalgeImpl extends UnicastRemoteObject implements GalgeInterface {
 
     @Override
     public String getBrugernavn() throws RemoteException {
-       return logik.getBrugernavn();
+        return logik.getBrugernavn();
     }
 
     @Override
     public void setBrugernavn(String brugernavn) throws RemoteException {
-       logik.setBrugernavn(brugernavn);
+        logik.setBrugernavn(brugernavn);
     }
 
     @Override
     public String getAdgangskode() throws RemoteException {
-      return logik.getAdgangskode();
+        return logik.getAdgangskode();
     }
 
     @Override
     public void setAdgangskode(String adgangskode) throws RemoteException {
-      logik.setAdgangskode(adgangskode);
+        logik.setAdgangskode(adgangskode);
     }
-
-    
-    
 
 }
