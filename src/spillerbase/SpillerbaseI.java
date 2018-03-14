@@ -5,7 +5,9 @@
  */
 package spillerbase;
 
+import galgeleg.GalgeImpl;
 import galgeleg.GalgeInterface;
+import galgeleg.Galgelogik;
 import java.util.ArrayList;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -14,16 +16,16 @@ import javax.jws.WebService;
  *
  * @author fahadali
  */
-@WebService
-public interface SpillerbaseI {
 
-    @WebMethod
-    GalgeInterface findGalgespiller(String brugernavn);
+public interface SpillerbaseI extends java.rmi.Remote {
 
-    @WebMethod
-    ArrayList<String> hentAlleKontonavne();
 
-    @WebMethod
-    void registrérKonto(String brugernavn, GalgeInterface g) throws java.rmi.RemoteException;
+    GalgeInterface findSpil(String navn) throws java.rmi.RemoteException;;
+
+
+    ArrayList<String> hentAlleSpillere() throws java.rmi.RemoteException;
+
+
+    void registrerSpiller(String navn) throws java.rmi.RemoteException;;
 
 }

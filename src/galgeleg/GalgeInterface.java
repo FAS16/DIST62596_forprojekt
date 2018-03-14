@@ -1,91 +1,76 @@
 package galgeleg;
 
+import brugerautorisation.transport.rmi.Brugeradmin;
 import java.io.IOException;
+import java.rmi.*;
+import java.util.Scanner;
 import javax.jws.WebMethod;
-import javax.jws.WebService;
 
-@WebService
-public interface GalgeInterface {
+//Op til server
+public interface GalgeInterface extends Remote {
 
-    @WebMethod
-    boolean isSessionHentet();
+    String getBrugernavn() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setSessionHentet(boolean sessionHentet);
+    void setBrugernavn(String brugernavn) throws java.rmi.RemoteException;
 
-    @WebMethod
-    String getBrugteBogstaver();
+    String getAdgangskode() throws java.rmi.RemoteException;
 
-    @WebMethod
-    String getSynligtOrd();
+    void setAdgangskode(String adgangskode) throws java.rmi.RemoteException;
 
-    @WebMethod
-    String getOrdet();
+    Brugeradmin getBrugerAdmin() throws java.rmi.RemoteException;
 
-    @WebMethod
-    int getAntalForkerteBogstaver();
+    void setBrugerAdmin(Brugeradmin brugerAdmin) throws java.rmi.RemoteException;
 
-    @WebMethod
-    boolean erSidsteBogstavKorrekt();
+    boolean isSessionHentet() throws java.rmi.RemoteException;
 
-    @WebMethod
-    boolean erSpilletVundet();
+    void setSessionHentet(boolean sessionHentet) throws java.rmi.RemoteException;
 
-    @WebMethod
-    boolean erSpilletTabt();
+    String getBrugteBogstaver() throws java.rmi.RemoteException;
 
-    @WebMethod
-    boolean erSpilletSlut();
+    String getSynligtOrd() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setOrdet(String ordet);
+    String getOrdet() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setBrugteBogstaver(String brugteBogstaver);
+    int getAntalForkerteBogstaver() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setSynligtOrd(String synligtOrd);
+    boolean erSidsteBogstavKorrekt() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setAntalForkerteBogstaver(int antalForkerteBogstaver);
+    boolean erSpilletVundet() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setSidsteBogstavVarKorrekt(boolean sidsteBogstavVarKorrekt);
+    boolean erSpilletTabt() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setSpilletErVundet(boolean spilletErVundet);
+    boolean erSpilletSlut() throws java.rmi.RemoteException;
 
-    @WebMethod
-    void setSpilletErTabt(boolean spilletErTabt);
+    void setOrdet(String ordet) throws java.rmi.RemoteException;
 
-    @WebMethod
-    void nulstil();
+    void setBrugteBogstaver(String brugteBogstaver) throws java.rmi.RemoteException;
 
-    @WebMethod
-    void opdaterSynligtOrd();
+    void setSynligtOrd(String synligtOrd) throws java.rmi.RemoteException;
 
-    @WebMethod
-    void gætBogstav(String bogstav);
+    void setAntalForkerteBogstaver(int antalForkerteBogstaver) throws java.rmi.RemoteException;
 
-    @WebMethod
-    public void logStatus();
+    void setSidsteBogstavVarKorrekt(boolean sidsteBogstavVarKorrekt) throws java.rmi.RemoteException;
 
-    @WebMethod
-    String hentUrl(String url) throws IOException;
+    void setSpilletErVundet(boolean spilletErVundet) throws java.rmi.RemoteException;
 
-    @WebMethod
-    void hentOrdFraDr() throws Exception;
+    void setSpilletErTabt(boolean spilletErTabt) throws java.rmi.RemoteException;
 
-    @WebMethod
-    boolean logInd(String brugernavn, String adgangskode) throws Exception;
+    void nulstil() throws java.rmi.RemoteException;
 
-    @WebMethod
-    public String visFigur();
+    void opdaterSynligtOrd() throws java.rmi.RemoteException;
 
-    @WebMethod
-    String outputTilKlient();
+    void gætBogstav(String bogstav) throws java.rmi.RemoteException;
 
-    @WebMethod
-    public void hentSidsteSession();
+    void logStatus() throws java.rmi.RemoteException;
+
+    String hentUrl(String url) throws java.rmi.RemoteException;
+
+    void logInd(String brugernavn, String adgangskode) throws java.rmi.RemoteException;
+
+    String visFigur() throws java.rmi.RemoteException;
+
+    String outputTilKlient() throws java.rmi.RemoteException;
+
+    void hentSidsteSession() throws java.rmi.RemoteException;
 
 }

@@ -5,9 +5,14 @@
  */
 package spillerbase;
 
+
+import galgeleg.GalgeImpl;
 import galgeleg.GalgeInterface;
+import galgeleg.Galgelogik;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.jws.WebService;
 
 /**
@@ -15,25 +20,34 @@ import javax.jws.WebService;
  * @author fahadali
  */
 
-@WebService(endpointInterface = "spillerbase.SpillerbaseI")
-public class SpillerbaseImpl implements SpillerbaseI {
+public class SpillerbaseImpl extends UnicastRemoteObject implements SpillerbaseI {
+
+    HashMap<String, GalgeImpl> galgeMap = new HashMap<>(); //kunne gemmes
+    
+    public SpillerbaseImpl()throws java.rmi.RemoteException{}
 
     @Override
-    public GalgeInterface findGalgespiller(String brugernavn) {
-         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public GalgeInterface findSpil(String navn) throws RemoteException {
+        System.out.println("findSpil(" + navn);
+        return galgeMap.get(navn);
     }
 
     @Override
-    public ArrayList<String> hentAlleKontonavne() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<String> hentAlleSpillere()throws RemoteException {
+        System.out.println("hentAlleSpillere()");
+        return new ArrayList<>(galgeMap.keySet());
     }
 
     @Override
-    public void registrérKonto(String brugernavn, GalgeInterface g) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void registrerSpiller(String navn) throws RemoteException{
+        
+        if (galgeMap.containsKey(navn)) {
+            throw new IllegalArgumentException("Spiller eksisterer allerede: " + navn);
+
+        } else{
+            System.out.println("Spiller registreret: "+navn);
+            galgeMap.put(navn, new GalgeImpl());
+        }
     }
-    
-    
-    
-    
+
 }

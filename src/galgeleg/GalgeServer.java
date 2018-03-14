@@ -1,21 +1,24 @@
 package galgeleg;
 
 import java.net.MalformedURLException;
-import javax.jws.WebService;
-import javax.xml.ws.Endpoint;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 
 
 //Op til server
 public class GalgeServer 
-{
-    public static void main(String[] args) throws MalformedURLException 
+{ 
+ 
+    private static int PORTNUMMER = 1099;
+    private String RMIURL = "rmi://130.225.170.248/GalgeServer";
+    
+    public static void main(String[] args) throws RemoteException, MalformedURLException 
     {
-        System.out.println("publicerer galgespil");
+        java.rmi.registry.LocateRegistry.createRegistry(1099);
         
-        GalgeInterface g = new Galgelogik();   
-        // Ipv6-addressen [::] svarer til Ipv4-adressen 0.0.0.0, der matcher alle maskinens netkort og IP-adresser
-        Endpoint.publish("http://[::]:9901/galgespil", g);
-        System.out.println("galgespil publiceret.");
+        GalgeInterface g = new GalgeImpl();
+        Naming.rebind("RMIURL", g);
+        System.out.println("Galgeserver startet");
         
     }
 }

@@ -9,9 +9,9 @@ public class Brugeradminklient {
 //		Brugeradmin ba =(Brugeradmin) Naming.lookup("rmi://localhost/brugeradmin");
 		Brugeradmin ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
 
-    //ba.sendGlemtAdgangskodeEmail("s123456", "Dette er 123");
-		System.out.println("Fik bruger = " + ba);
-		System.out.println("Data: " + Diverse.toString(ba));
+    ba.sendGlemtAdgangskodeEmail("s165159", "Skift dit pswd bri");
+		//System.out.println("Fik bruger = " + ba);
+		//System.out.println("Data: " + Diverse.toString(ba));
 		// ba.sendEmail("jacno", "xxx", "Hurra det virker!", "Jeg er så glad");
 
 //		Object ekstraFelt = ba.getEkstraFelt("s160344", "Linux123", "hobby");
@@ -21,10 +21,11 @@ public class Brugeradminklient {
 //
 //		String webside = (String) ba.getEkstraFelt("s123456", "kodeen test, husk at skifte kode");
 		//ba.ændrAdgangskode("s123456", "kode1xyz", "kode1xyz");
-		Bruger b = ba.hentBruger("s163044", "Linux123");
+		//Bruger b = ba.hentBruger("s1644", "Linux123");
                 
-		System.out.println("Fik bruger = " + b);
-		System.out.println("Data: " + Diverse.toString(b));
+                
+		//System.out.println("Fik bruger = " + b);
+		//System.out.println("Data: " + Diverse.toString(b));
 		// ba.sendEmail("jacno", "xxx", "Hurra det virker!", "Jeg er så glad");
 
 //		Object ekstraFelt = ba.getEkstraFelt("s160344", "Linux123", "hobby");
